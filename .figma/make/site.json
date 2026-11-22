@@ -1,0 +1,10 @@
+{
+  "description": "Discover tourist destinations with educational content, then test your knowledge through quizzes to earn points and badges. Perfect for travelers looking to learn while exploring.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
