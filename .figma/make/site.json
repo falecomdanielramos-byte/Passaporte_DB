@@ -1,5 +1,13 @@
 {
-  "description": "Discover tourist destinations with educational content, then test your knowledge through quizzes to earn points and badges. Perfect for travelers looking to learn while exploring.",
+  "title": "Rota Viva — Descubra Aracaju",
+  "description": "Conheça a história de quatro pontos turísticos de Aracaju, responda aos quizzes e conquiste selos culturais.",
+  "language": "pt-BR",
+  "icons": {
+    "icon": "/icon-192.png"
+  },
+  "customScripts": {
+    "headEnd": "<link rel=\"manifest\" href=\"./manifest.webmanifest\"><meta name=\"theme-color\" content=\"#123a32\"><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black-translucent\"><link rel=\"apple-touch-icon\" href=\"./icon-192.png\">"
+  },
   "robots": {
     "index": false
   },

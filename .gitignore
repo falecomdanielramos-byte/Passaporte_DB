@@ -19,5 +19,3 @@ logs/
 # beside it.
 /.plugins/
 /.opencode-skills/
-# Arquivo compactado do projeto
-*.zip

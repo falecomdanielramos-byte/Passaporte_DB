@@ -1,5 +1,8 @@
-import { useMemo, useState } from 'react'
-
+import { useEffect, useMemo, useState } from 'react'
+import aracajuHero from './assets/aracaju-hero.png'
+import mercadoImage from './assets/mercado-antonio-franco.jpg'
+import museuImage from './assets/museu-gente.jpg'
+import parqueImage from './assets/parque-sementeira.jpg'
 
 type Question = {
   prompt: string
@@ -16,108 +19,126 @@ type Place = {
   image: string
   fact: string
   description: string[]
+  history: {
+    label: string
+    title: string
+    text: string
+  }[]
   highlights: string[]
   quiz: Question[]
 }
 
 const places: Place[] = [
-{
-  id: 'Passarela-Do-Caranguejo',
-  number: '01',
-  city: 'Aracaju · SE',
-  title: 'Passarela Do Caranguejo',
-  eyebrow: 'A capital sergipana entre rios e mar',
-  image: 'https://imgmd.net/images/c_limit%2Cw_1200/v1/guia/1702806/passarela-do-caranguejo.jpg',
-  fact: 'Aracaju é a capital do estado de Sergipe',
-  description: [
-    'Aracaju é conhecida por suas praias, sua tranquilidade e pela hospitalidade de seu povo. Um dos lugares mais conhecidos da cidade é a Orla de Atalaia, que reúne áreas de lazer, restaurantes e espaços para visitantes.',
-    'Na Passarela do Caranguejo, um dos destaques é a famosa escultura de um caranguejo gigante. O local é bastante conhecido pela culinária regional, principalmente pelos pratos feitos com frutos do mar.'
-  ],
-  highlights: [
-    'Conheça a Passarela do Caranguejo',
-    'Visite a Orla de Atalaia',
-    'Experimente a culinária sergipana'
-  ],
-  quiz: [
-    { prompt: 'Qual é o estado cuja capital é Aracaju?', options: ['Bahia', 'Sergipe', 'Alagoas', 'Pernambuco'], answer: 1 },
-    { prompt: 'Qual é o nome da famosa orla de Aracaju?', options: ['Orla de Copacabana', 'Orla de Boa Viagem', 'Orla de Atalaia', 'Orla de Ipanema'], answer: 2 },
-    { prompt: 'Qual escultura é um dos símbolos da Passarela do Caranguejo?', options: ['Um peixe gigante', 'Um caranguejo gigante', 'Uma tartaruga', 'Um golfinho'], answer: 1 },
-    { prompt: 'Aracaju é conhecida por qual tipo de culinária?', options: ['Culinária regional e frutos do mar', 'Comida japonesa', 'Comida mexicana', 'Comida italiana'], answer: 0 }
-  ]
-},
   {
-  id: 'museu-gente',
-  number: '02',
-  city: 'Aracaju · SE',
-  title: 'Museu da Gente Sergipana',
-  eyebrow: 'A história e a cultura de Sergipe',
-  image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVuUq7c072VDS3IrnvhCEL0f4LTuiqpX4HipvQf2DwMw&s=10',
-  fact: 'Inaugurado em 26 de novembro de 2011',
-  description: [
-    'O Museu da Gente Sergipana é um espaço cultural localizado no centro de Aracaju. Ele apresenta a história, os costumes e as tradições do povo sergipano.',
-    'O museu possui exposições interativas e recursos tecnológicos que permitem aos visitantes conhecer melhor a culinária, as festas, as paisagens e as manifestações culturais de Sergipe.'
-  ],
-  highlights: [
-    'Conheça a cultura sergipana',
-    'Explore as exposições interativas',
-    'Aprenda sobre as tradições locais'
-  ],
-  quiz: [
-    { prompt: 'Em qual cidade fica o Museu da Gente Sergipana?', options: ['Salvador', 'Aracaju', 'Maceió', 'Recife'], answer: 1 },
-    { prompt: 'Em qual ano o museu foi inaugurado?', options: ['2001', '2005', '2011', '2018'], answer: 2 },
-    { prompt: 'O que o museu apresenta aos visitantes?', options: ['A cultura e a história de Sergipe', 'A história do futebol', 'A cultura japonesa', 'A história da aviação'], answer: 0 },
-    { prompt: 'Qual recurso é utilizado nas exposições?', options: ['Somente livros', 'Exposições interativas e tecnologia', 'Apenas fotografias antigas', 'Somente pinturas'], answer: 1 }
-  ]
-},
-{
-  id: 'parque-sementeira',
-  number: '03',
-  city: 'Aracaju · SE',
-  title: 'Parque da Sementeira',
-  eyebrow: 'Natureza e tranquilidade na cidade',
-  image: 'https://www.aracaju.se.gov.br/storage/media/2010/03/especial_bairro_13_de_julho_foto_jorge__henrique_090709_62.jpg',
-  fact: 'Também conhecido como Parque Augusto Franco',
-  description: [
-    'O Parque da Sementeira é uma das áreas verdes de Aracaju e um espaço bastante utilizado para lazer e contato com a natureza.',
-    'O parque possui áreas para caminhadas, lagos, quadras esportivas, espaços para piqueniques e locais destinados às atividades físicas. É uma opção para quem deseja descansar e aproveitar um ambiente ao ar livre.'
-  ],
-  highlights: [
-    'Aproveite as áreas verdes',
-    'Faça uma caminhada pelo parque',
-    'Conheça os lagos e espaços de lazer'
-  ],
-  quiz: [
-    { prompt: 'Em qual cidade fica o Parque da Sementeira?', options: ['Tobias Barreto', 'Aracaju', 'Itabaiana', 'Estância'], answer: 1 },
-    { prompt: 'Qual é outro nome do Parque da Sementeira?', options: ['Parque Augusto Franco', 'Parque da Orla', 'Parque dos Coqueiros', 'Parque Central'], answer: 0 },
-    { prompt: 'Qual atividade pode ser realizada no parque?', options: ['Esquiar', 'Caminhar', 'Surfar', 'Patinar no gelo'], answer: 1 },
-    { prompt: 'O parque possui quais espaços?', options: ['Lagos e quadras esportivas', 'Praias artificiais', 'Montanhas e cavernas', 'Pistas de avião'], answer: 0 }
-  ]
-},
+    id: 'passarela-do-caranguejo',
+    number: '01',
+    city: 'Orla de Atalaia · Aracaju',
+    title: 'Passarela do Caranguejo',
+    eyebrow: 'Sabores, mangue e identidade',
+    image: aracajuHero,
+    fact: 'Corredor gastronômico da Orla de Atalaia',
+    description: [
+      'A Passarela do Caranguejo é o trecho da Orla de Atalaia conhecido pela concentração de bares e restaurantes dedicados à cozinha sergipana. Não há uma data única de fundação oficialmente consolidada para a Passarela: ela se firmou como corredor turístico e gastronômico durante a urbanização e a expansão da Orla.',
+      'O nome nasceu da forte presença do caranguejo nos cardápios e na cultura alimentar local. O crustáceo vem dos manguezais, ecossistemas que marcam a paisagem e sustentam práticas de pesca e trabalho de comunidades sergipanas.',
+    ],
+    history: [
+      { label: 'Origem', title: 'Uma formação gradual', text: 'Diferentemente de um edifício inaugurado em uma data específica, a Passarela se consolidou com o desenvolvimento turístico da Atalaia. Por isso, o projeto não atribui ao local um ano de fundação sem comprovação documental.' },
+      { label: 'Memória cultural', title: 'O mangue à mesa', text: 'A ligação entre restaurantes, catadores, manguezais e receitas tradicionais transformou o caranguejo em símbolo da experiência gastronômica de Aracaju.' },
+      { label: 'Símbolo', title: 'O caranguejo gigante', text: 'A escultura monumental marca visualmente a Passarela. Ela representa o crustáceo que dá nome ao corredor e funciona como referência de chegada, encontro e fotografia na Orla.' },
+      { label: 'Importância', title: 'Porta de entrada da cidade', text: 'O local articula turismo, lazer noturno, culinária e economia criativa, divulgando sabores sergipanos para moradores e visitantes.' },
+    ],
+    highlights: ['Observe o monumento do caranguejo', 'Valorize a culinária sergipana', 'Conheça a Orla de Atalaia'],
+    quiz: [
+      { prompt: 'Por que a Passarela recebeu o nome “do Caranguejo”?', options: ['Pela tradição gastronômica ligada ao crustáceo', 'Pelo formato de suas calçadas', 'Por uma antiga estação ferroviária', 'Por uma competição esportiva'], answer: 0 },
+      { prompt: 'Onde fica a Passarela do Caranguejo?', options: ['No Parque da Sementeira', 'Na Orla de Atalaia', 'Nos Mercados Centrais', 'Na Praça Fausto Cardoso'], answer: 1 },
+      { prompt: 'O que a escultura do caranguejo representa?', options: ['A navegação no rio Sergipe', 'A indústria da cidade', 'O crustáceo ligado à culinária e aos manguezais', 'A fundação administrativa de Aracaju'], answer: 2 },
+      { prompt: 'Qual informação histórica é mais correta sobre sua criação?', options: ['Foi fundada em 1855', 'Foi inaugurada em 1926', 'Foi aberta em 2011', 'Não há uma data única de fundação oficialmente consolidada'], answer: 3 },
+    ],
+  },
   {
-  id: 'mercado-antonio-franco',
-  number: '04',
-  city: 'Aracaju · SE',
-  title: 'Mercado Antônio Franco',
-  eyebrow: 'Sabores e tradições sergipanas',
-  image: 'https://vault-us-east-1.pulsarimagens.com.br/file/preview/39RC303.jpg',
-  fact: 'Inaugurado em 8 de fevereiro de 1926',
-  description: [
-    'O Mercado Municipal Antônio Franco é um dos espaços históricos mais conhecidos de Aracaju. Localizado na região central, ele reúne comerciantes, moradores e visitantes.',
-    'No mercado é possível encontrar artesanato, produtos regionais, doces, temperos e comidas típicas. O local também representa uma parte importante da história comercial e cultural da capital sergipana.'
-  ],
-  highlights: [
-    'Conheça o artesanato regional',
-    'Experimente os doces típicos',
-    'Explore os mercados do centro'
-  ],
-  quiz: [
-    { prompt: 'Em qual cidade fica o Mercado Antônio Franco?', options: ['Aracaju', 'Estância', 'Lagarto', 'Itabaiana'], answer: 0 },
-    { prompt: 'Em qual ano o mercado foi inaugurado?', options: ['1900', '1926', '1950', '1980'], answer: 1 },
-    { prompt: 'O que pode ser encontrado no mercado?', options: ['Somente eletrônicos', 'Artesanato e produtos regionais', 'Apenas roupas importadas', 'Somente livros escolares'], answer: 1 },
-    { prompt: 'O mercado representa principalmente qual aspecto da cidade?', options: ['A cultura e o comércio local', 'A indústria automobilística', 'O turismo de neve', 'A produção de petróleo'], answer: 0 }
-  ]
-},
+    id: 'museu-gente',
+    number: '02',
+    city: 'Centro · Aracaju',
+    title: 'Museu da Gente Sergipana',
+    eyebrow: 'Sergipe contado por sua gente',
+    image: museuImage,
+    fact: 'Inaugurado em 26 de novembro de 2011',
+    description: [
+      'O Museu da Gente Sergipana Governador Marcelo Déda foi inaugurado em 26 de novembro de 2011. Instalado no edifício histórico que abrigou o antigo Atheneuzinho, o espaço foi restaurado para receber um museu dedicado ao patrimônio cultural do estado.',
+      'Suas instalações multimídia apresentam falares, festas, paisagens, ofícios, culinária e personagens de Sergipe. Em vez de observar apenas objetos em vitrines, o visitante participa das narrativas por meio de jogos, sons, projeções e experiências interativas.',
+    ],
+    history: [
+      { label: 'Inauguração', title: '26 de novembro de 2011', text: 'A data marca a abertura do museu ao público e a transformação do antigo prédio escolar em um centro de memória e cultura sergipana.' },
+      { label: 'Patrimônio', title: 'O antigo Atheneuzinho', text: 'A reutilização do edifício histórico preserva uma referência da paisagem urbana do Centro e dá ao patrimônio arquitetônico uma nova função pública.' },
+      { label: 'Linguagem', title: 'Memória interativa', text: 'As instalações usam tecnologia para valorizar patrimônio material e imaterial: modos de falar, trabalhar, festejar, cozinhar e viver no território sergipano.' },
+      { label: 'Importância', title: 'Um museu feito de pessoas', text: 'O museu fortalece a identidade estadual, aproxima novas gerações de sua história e se tornou uma das principais referências culturais de Aracaju.' },
+    ],
+    highlights: ['Explore as instalações interativas', 'Observe o antigo Atheneuzinho', 'Descubra os falares e saberes locais'],
+    quiz: [
+      { prompt: 'Em que data o Museu da Gente Sergipana foi inaugurado?', options: ['17 de março de 1855', '8 de fevereiro de 1926', '26 de novembro de 2011', '12 de agosto de 2020'], answer: 2 },
+      { prompt: 'Qual edifício histórico passou a abrigar o museu?', options: ['O antigo Atheneuzinho', 'A antiga Alfândega', 'O Palácio Olímpio Campos', 'A estação ferroviária'], answer: 0 },
+      { prompt: 'O que as exposições valorizam?', options: ['Somente documentos administrativos', 'Os saberes, costumes e identidades de Sergipe', 'Apenas a formação urbana da Atalaia', 'Exclusivamente o comércio municipal'], answer: 1 },
+      { prompt: 'Como o visitante conhece essas histórias?', options: ['Apenas por livros', 'Somente por visitas externas', 'Por instalações multimídia e interativas', 'Apenas por fotografias impressas'], answer: 2 },
+    ],
+  },
+  {
+    id: 'parque-sementeira',
+    number: '03',
+    city: 'Jardins · Aracaju',
+    title: 'Parque da Sementeira',
+    eyebrow: 'Memória verde no coração urbano',
+    image: parqueImage,
+    fact: 'Nome oficial: Parque Governador Augusto Franco',
+    description: [
+      'O Parque Governador Augusto Franco é conhecido por todos como Parque da Sementeira. O apelido preserva a memória do uso da área como viveiro de mudas — uma “sementeira” voltada à arborização urbana — antes de sua consolidação como parque público.',
+      'Não há, nas referências públicas consultadas, uma data única de fundação apresentada de modo consistente. Por isso, o Rota Viva não atribui ao parque um ano sem comprovação. Seu valor histórico está na transformação de uma área de produção de mudas em um dos principais espaços verdes de Aracaju.',
+    ],
+    history: [
+      { label: 'Criação', title: 'Data não consolidada', text: 'As fontes públicas descrevem a função e o desenvolvimento do parque, mas não oferecem uma data única e segura de fundação. Essa ausência é indicada em vez de se adotar um ano sem base documental.' },
+      { label: 'Origem do nome', title: 'Da produção de mudas ao parque', text: '“Sementeira” remete ao viveiro que fornecia mudas para a arborização da cidade. O nome popular mantém viva essa função anterior do terreno.' },
+      { label: 'Nome oficial', title: 'Governador Augusto Franco', text: 'A denominação oficial homenageia Augusto Franco, que governou Sergipe. O nome popular, porém, permaneceu mais presente no cotidiano aracajuano.' },
+      { label: 'Importância', title: 'Natureza dentro da cidade', text: 'Lagos, árvores, aves e áreas de convivência fazem do parque um espaço de educação ambiental, esporte, lazer e equilíbrio ecológico urbano.' },
+    ],
+    highlights: ['Caminhe sob as áreas arborizadas', 'Observe lagos e aves', 'Respeite a fauna e a vegetação'],
+    quiz: [
+      { prompt: 'Qual é o nome oficial do Parque da Sementeira?', options: ['Parque Governador Augusto Franco', 'Parque dos Cajueiros', 'Parque da Atalaia', 'Parque do Centro'], answer: 0 },
+      { prompt: 'O que explica o nome popular “Sementeira”?', options: ['Uma feira de sementes', 'O antigo uso da área como viveiro de mudas', 'O formato de um dos lagos', 'Uma festa anual'], answer: 1 },
+      { prompt: 'Qual cuidado histórico foi adotado sobre a data de criação?', options: ['Foi definida como 1855', 'Foi definida como 1926', 'Foi definida como 2011', 'A data não foi afirmada sem fonte pública consistente'], answer: 3 },
+      { prompt: 'Por que o parque é importante para Aracaju?', options: ['Por concentrar o comércio atacadista', 'Por ser uma área verde de lazer e educação ambiental', 'Por abrigar o porto da cidade', 'Por ser um corredor gastronômico'], answer: 1 },
+    ],
+  },
+  {
+    id: 'mercado-antonio-franco',
+    number: '04',
+    city: 'Centro · Aracaju',
+    title: 'Mercado Antônio Franco',
+    eyebrow: 'Comércio, sabores e memória',
+    image: mercadoImage,
+    fact: 'Inaugurado em 8 de fevereiro de 1926',
+    description: [
+      'Inaugurado em 8 de fevereiro de 1926, o Mercado Municipal Antônio Franco nasceu em um período de modernização do Centro de Aracaju e de organização do comércio de gêneros alimentícios. Hoje integra o conjunto dos Mercados Centrais.',
+      'O edifício preserva uma intensa vida comercial, com artesanato, bordados, literatura de cordel, temperos, doces e produtos regionais. É um ponto de encontro entre a economia cotidiana e a memória cultural sergipana.',
+    ],
+    history: [
+      { label: 'Inauguração', title: '8 de fevereiro de 1926', text: 'A abertura do mercado estruturou parte do abastecimento e do comércio no Centro, acompanhando o crescimento urbano de Aracaju no início do século XX.' },
+      { label: 'Vocação', title: 'Do abastecimento à cultura', text: 'Além da função comercial, o mercado passou a reunir práticas, sabores e trabalhos artesanais que expressam modos de vida de diferentes regiões de Sergipe.' },
+      { label: 'Elemento marcante', title: 'A torre do relógio', text: 'A torre se tornou uma referência visual do conjunto. O relógio reforça a presença pública do edifício na paisagem e orienta a identificação do mercado no Centro histórico.' },
+      { label: 'Importância', title: 'Memória viva do comércio', text: 'A circulação de feirantes, artesãos, moradores e visitantes mantém o patrimônio em uso e conecta a capital à produção cultural do estado.' },
+    ],
+    highlights: ['Observe a torre do relógio', 'Conheça o artesanato sergipano', 'Experimente sabores regionais'],
+    quiz: [
+      { prompt: 'Quando o Mercado Antônio Franco foi inaugurado?', options: ['17 de março de 1855', '8 de fevereiro de 1926', '26 de novembro de 2011', '12 de junho de 2015'], answer: 1 },
+      { prompt: 'Qual elemento se destaca na arquitetura do mercado?', options: ['Um farol', 'Uma ponte suspensa', 'A torre do relógio', 'Um coreto circular'], answer: 2 },
+      { prompt: 'Qual foi uma função histórica do mercado?', options: ['Organizar o abastecimento e o comércio no Centro', 'Abrigar o governo estadual', 'Produzir mudas para a cidade', 'Receber competições esportivas'], answer: 0 },
+      { prompt: 'O que o mercado representa atualmente?', options: ['Apenas um edifício sem uso', 'Uma ligação viva entre comércio e cultura sergipana', 'Somente um terminal de transporte', 'Uma área exclusivamente residencial'], answer: 1 },
+    ],
+  },
 ]
+
+interface InstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
 
 function ArrowIcon() {
   return <span aria-hidden="true" className="arrow">→</span>
@@ -130,6 +151,23 @@ export default function App() {
   const [selected, setSelected] = useState<number | null>(null)
   const [answers, setAnswers] = useState<Record<string, number[]>>({})
   const [menuOpen, setMenuOpen] = useState(false)
+  const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null)
+
+  useEffect(() => {
+    const handleInstallPrompt = (event: Event) => {
+      event.preventDefault()
+      setInstallPrompt(event as InstallPromptEvent)
+    }
+    window.addEventListener('beforeinstallprompt', handleInstallPrompt)
+    return () => window.removeEventListener('beforeinstallprompt', handleInstallPrompt)
+  }, [])
+
+  const installApp = async () => {
+    if (!installPrompt) return
+    await installPrompt.prompt()
+    await installPrompt.userChoice
+    setInstallPrompt(null)
+  }
 
   const completed = useMemo(
     () => places.filter((place) => answers[place.id]?.length === place.quiz.length),
@@ -176,14 +214,15 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <header className="site-header">
+      <header className={`site-header ${quizPlace && questionIndex >= quizPlace.quiz.length ? 'dark-header' : ''}`}>
         <button className="brand" onClick={resetToHome} aria-label="Voltar ao início">
-          <span className="brand-mark">BR</span>
+          <span className="brand-mark">AJU</span>
           <span><strong>Rota Viva</strong><small>descubra · aprenda · conquiste</small></span>
         </button>
         <nav className={menuOpen ? 'main-nav open' : 'main-nav'} aria-label="Navegação principal">
           <button onClick={resetToHome}>Explorar</button>
           <button onClick={() => document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' })}>Como funciona</button>
+          {installPrompt && <button className="install-button" onClick={installApp}>Instalar aplicativo</button>}
           <div className="score-pill"><span>{completed.length}/4 selos</span><strong>{totalPoints} pts</strong></div>
         </nav>
         <button className="menu-button" aria-label="Abrir menu" onClick={() => setMenuOpen(!menuOpen)}>
@@ -220,10 +259,10 @@ export default function App() {
 
       <footer>
         <button className="brand footer-brand" onClick={resetToHome}>
-          <span className="brand-mark">BR</span>
+          <span className="brand-mark">AJU</span>
           <span><strong>Rota Viva</strong><small>viajar também é aprender</small></span>
         </button>
-        <p>Feito para quem quer conhecer o Brasil com outros olhos.</p>
+        <p>Feito para quem quer conhecer Aracaju com outros olhos.</p>
         <span>© 2025 Rota Viva</span>
       </footer>
     </div>
@@ -234,22 +273,22 @@ function Home({ completed, totalPoints, onOpen, onStart }: { completed: Place[];
   return (
     <main>
       <section className="hero">
-        <img src="https://www.segueviagem.com.br/wp-content/uploads/2020/10/shutterstock_458684110-1024x683.jpg" alt="Orla de Atalaia em Aracaju" />
-        
+        <img src={aracajuHero} alt="Passarela do Caranguejo na Orla de Atalaia, em Aracaju" />
+        <div className="hero-shade"></div>
         <div className="hero-content">
-          <p className="kicker">Uma jornada pelo Brasil</p>
+          <p className="kicker">Uma jornada por Aracaju</p>
           <h1>Explore.<br /><em>Descubra.</em> Conquiste.</h1>
-          <p className="hero-copy">Conheça lugares extraordinários, teste o que aprendeu e colecione memórias — e selos — pelo caminho.</p>
+          <p className="hero-copy">Conheça a história da capital sergipana, teste o que aprendeu e colecione memórias — e selos — pelo caminho.</p>
           <button className="primary light" onClick={onStart}>Começar a explorar <ArrowIcon /></button>
         </div>
-        <div className="hero-note"><span>Em destaque</span><strong>Orla de Atalaia</strong><small>Aracaju · SE</small></div>
+        <div className="hero-note"><span>Em destaque</span><strong>Passarela do Caranguejo</strong><small>Orla de Atalaia · Aracaju</small></div>
         <div className="scroll-cue">Role para descobrir <span>↓</span></div>
       </section>
 
       <section className="intro" id="como-funciona">
         <div><p className="section-label">Seu passaporte cultural</p><h2>Viaje com<br /><em>curiosidade</em></h2></div>
         <div className="intro-copy">
-          <p>Selecionamos quatro destinos que contam histórias únicas sobre o Brasil. Leia, observe e coloque seu conhecimento à prova.</p>
+          <p>Selecionamos quatro destinos que revelam histórias únicas de Aracaju e de Sergipe. Leia, observe e coloque seu conhecimento à prova.</p>
           <div className="steps">
             <span><b>1</b> Explore o lugar</span><span><b>2</b> Faça o quiz</span><span><b>3</b> Ganhe seu selo</span>
           </div>
@@ -281,7 +320,7 @@ function Home({ completed, totalPoints, onOpen, onStart }: { completed: Place[];
       <section className="progress-section">
         <div className="progress-copy"><p className="section-label">Seu progresso</p><h2>Cada resposta<br />é um novo caminho.</h2><p>Você já conquistou <strong>{totalPoints} pontos</strong>. Continue explorando para completar sua coleção.</p></div>
         <div className="passport">
-          <div className="passport-top"><span>PASSAPORTE</span><small>ROTA VIVA · BRASIL</small></div>
+          <div className="passport-top"><span>PASSAPORTE</span><small>ARACAJU · SERGIPE</small></div>
           <div className="stamp-grid">
             {places.map((place) => {
               const done = completed.some((item) => item.id === place.id)
@@ -311,6 +350,21 @@ function PlaceDetail({ place, completed, onBack, onQuiz }: { place: Place; compl
           <div className="tips">{place.highlights.map((item, i) => <span key={item}><b>0{i + 1}</b>{item}</span>)}</div>
         </div>
       </section>
+      <section className="history-section">
+        <div className="history-heading">
+          <p className="section-label">Memória do lugar</p>
+          <h2>História que<br /><em>permanece viva</em></h2>
+        </div>
+        <div className="history-grid">
+          {place.history.map((item, index) => (
+            <article key={item.title}>
+              <span>{String(index + 1).padStart(2, '0')} · {item.label}</span>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
       <section className="quiz-callout">
         <div><p className="section-label">Hora do desafio</p><h2>Você prestou<br /><em>atenção?</em></h2></div>
         <div><p>Responda 4 perguntas sobre este destino. Cada acerto vale 100 pontos e, ao terminar, você ganha um selo.</p><button className="primary" onClick={onQuiz}>{completed ? 'Refazer o quiz' : 'Começar o quiz'} <ArrowIcon /></button></div>
@@ -324,7 +378,7 @@ function Quiz({ place, index, selected, setSelected, onSubmit, answers, onBack, 
     const points = answers.filter((answer, i) => answer === place.quiz[i].answer).length * 100
     return (
       <main className="result-page">
-        <div className="result-stamp"><span>SELO CONQUISTADO</span><strong>{place.number}</strong><em>{place.title}</em><small>ROTA VIVA · BRASIL</small></div>
+        <div className="result-stamp"><span>SELO CONQUISTADO</span><strong>{place.number}</strong><em>{place.title}</em><small>ARACAJU · SERGIPE</small></div>
         <p className="section-label">Destino concluído</p>
         <h1>Boa viagem,<br /><em>explorador!</em></h1>
         <p>Você acertou <strong>{points / 100} de 4 perguntas</strong> e somou <strong>{points} pontos</strong>.</p>
