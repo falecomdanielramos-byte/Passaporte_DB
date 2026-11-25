@@ -153,3 +153,9 @@ footer { min-height: 150px; padding: 38px 5vw; display: flex; align-items: cente
   .quiz-progress > div { grid-column: 1 / -1; grid-row: 2; }
   .quiz-panel h1 { font-size: 30px; }
 }
+/* Ajuste da imagem da Passarela no celular */
+@media (max-width: 800px) {
+  .hero > img {
+    object-position: center 35%;
+  }
+}
